@@ -1,0 +1,49 @@
+1. 설치
+  > pip install Flask-Migrate
+
+2. 사용
+  > config.py를 작성하여 아래 값을 작성한다.(sqlite)
+     SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(os.path.join(BASE_DIR, 'pybo.db'))
+     SQLALCHEMY_TRACK_MODIFICATIONS = False
+  > init.py 파일에 적용해 준다
+     from flask_migrate import Migrate
+     from flask_sqlalchemy import SQLAlchemy
+     db = SQLAlchemy()
+     migrate=Migrate()
+     ...
+        app.config.from_object(config)
+        db.init_app(app)
+        migrate.init_app(app, db)
+
+3. 초기화
+  > flask db init #최초 1회만 진행, 진행되면 migrations 디렉토리가 생성된다.
+
+4. 모델생성
+  > models.py 파일을 작성하여 테이블을 작성한다.
+     from pybo import db
+     from sqlalchemy_utils import IPAddressType
+     #Type = Integer, String, Text, DateTime
+     #option = primary_key=True/False, nullable=True/False)
+     # ForeignKey[ondelete...], backref...
+     class {모델명}(db.Model):
+        {컬럼명} = db.Column(db.{Type}
+5. 모델 적용
+  > init.py 파일
+     from . import models
+
+6. flask migrate
+  > flask db migrate
+  # 실행 후 migrations\versions\ 하위에 리비전 파일이 생긴다. 해당 파일로 DB 스키마를 관리한다.
+  > flask db upgrade
+  # 실행 후 pybo.db에 테이블이 적용된다. sqlalchemy_utils를 사용하는 경우 아래 파일 수정해야 오류가 없다.
+  # migrations\script.py.mako 파일 최상단에 "import sqlalchemy_utils"를 추가한다.
+  ## pycharm 사용할 경우 [ [ctrl] + [Alt] + s ] 클릭하여 plugin을 통해 "Database Navigator" 설치하면 편하게 확인 가능하다.
+
+7. console을 통해 모델 사용
+  > flask shell
+  >>> from pybo import db
+  >>> m = model 객체 정보 입력 생성
+  >>> db.session.add(m)
+  >>> db.session.commit()
+  >>> {모델명}.query.filter({모델명}.{컬럼명}==1).all()
+  >>> {모델명}.query.filter({모델명}.{컬럼명}.like('%{검색어}%')).all()

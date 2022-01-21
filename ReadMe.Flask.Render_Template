@@ -1,0 +1,26 @@
+1. 생성
+    > from flask import Blueprint, render_template
+    >   ...
+    >   render_template('question/question_list.html',question_list=question_list)
+
+2. 템플릿 만들기
+    > Default로 Flask는 APP으로 지정된 모듈 아래 templates라는 디렉토리를 인식한다.
+
+Flask에서 자주 사용 하는 템플릿 태그
+1. {% if 문 %} ~ {% endif %}
+파이썬과 매우 유사하지만, 다른점은 조건문들을 {% %} 감싸주면 된다. 또한 파이썬은 else문을 쓰고 끝나지만 템플릿에서는 if문을 사용하면 반드시 {% endif %}로 닫아주어야 한다.
+
+2. {% for % } loop 속성
+이것도 파이썬 for문과 비슷하다. 하지만 Flask 템플릿 태그는 편의를 위한 loop 속성을 제공한다.
+
+{% for item in list %}
+    <p>순서: {{ loop.index }} </p>
+    <p>{{ item }}</p>
+{% endfor %}
+
+loop 속성의 종류
+loop.index : 반복 순서, 1부터 1씩 증가
+loop.index() : 반복 순서, 0부터 1씩 증가
+loop.first : 반복 순서가 첫 번째 순서면 True 아니면 False
+loop.last : 반복 순서가 마지막 순서면 True 아니면 False
+
